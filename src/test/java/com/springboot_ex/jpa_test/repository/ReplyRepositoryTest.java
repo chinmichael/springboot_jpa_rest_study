@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 @SpringBootTest
@@ -31,5 +32,15 @@ public class ReplyRepositoryTest {
 
             replyRepository.save(reply);
         });
+    }
+
+    @Test
+    public void readReply1() {
+        Optional<Reply> result = replyRepository.findById(1L); // 쿼리문에서 연관된 모든 테이블(Member, Board)까지 조인됨
+
+        Reply reply = result.get();
+
+        System.out.println(reply); // 참조한 부분 제외해서 보여줌
+        System.out.println(reply.getBoard()); // Board객체에 해당하는 부분은 이쪽으로 따로 가져와야한다.
     }
 }

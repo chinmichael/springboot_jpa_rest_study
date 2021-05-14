@@ -20,7 +20,8 @@ public class Board extends BaseEntity {
 
     private String content;
 
-    @ManyToOne // 다대일 연관관계시 사용하는 참조 어노테이션 | 데이터를 가져와 저장해야 하므로 당연히 참조하는 측에 선언해야한다
+    @ManyToOne(fetch = FetchType.LAZY)
+    // 다대일 연관관계시 사용하는 참조 어노테이션 | 데이터를 가져와 저장해야 하므로 당연히 참조하는 측에 선언해야한다
     private Member writer;
     // 주의해야할 점은 SQL처럼 참조하는 PK 필드를 FK로 선언하는게 아니라 JPA에서는 그 Entity 객체를 참조한다 (물론 내부적으로는 알아서 참조대상 PK를 FK로 삼는다)
 }

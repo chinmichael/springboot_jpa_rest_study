@@ -16,6 +16,8 @@ public interface BoardService {
 
     void removeWithReplies(Long bno);
 
+    void modify(BoardDTO dto);
+
     /*
     Board Entity는 내부에 Member Entity를 참조하므로
     실제 DB에 존재하는 Member의 PK(Board입장에선 참조하는 FK)을 통해 Member Entity 객체를 처리하여

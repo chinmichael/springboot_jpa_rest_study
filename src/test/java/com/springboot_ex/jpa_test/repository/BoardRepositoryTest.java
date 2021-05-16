@@ -85,6 +85,23 @@ public class BoardRepositoryTest {
         Object[] arr = (Object[]) result;
         System.out.println(Arrays.toString(arr));
     }
+
+    @Test
+    public void testSearch1() {
+        boardRepository.search1();
+    }
+
+    @Test
+    public void testSearch2() {
+        boardRepository.search2();
+    }
+
+    @Test
+    public void testSearchPage() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("bno").descending());
+
+        Page<Object[]> result = boardRepository.searchPage("t", "1", pageable);
+    }
 }
 
 /*  5/14 : Eager loading / Lazy loading

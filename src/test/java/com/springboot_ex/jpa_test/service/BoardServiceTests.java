@@ -61,7 +61,6 @@ public class BoardServiceTests {
                 .build();
 
         boardService.modify(dto);
-
     }
 
 }

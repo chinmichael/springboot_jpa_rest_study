@@ -42,9 +42,12 @@ public class BoardServiceImpl implements BoardService {
         log.info(pageRequestDTO);
         
         Function<Object[], BoardDTO> fn = en -> entityToDTO((Board)en[0], (Member)en[1], (Long)en[2]);
+        // Function<T, R> | R apply(T t) : T타입의 매개변수를 하나 받아 R타입의 반환값을 내는 경우
 
-        Page<Object[]> result = repository.getBoardWithReplyCount(pageRequestDTO.getPageable(Sort.by("bno").descending()));
-        
+        //Page<Object[]> result = repository.getBoardWithReplyCount(pageRequestDTO.getPageable(Sort.by("bno").descending()));
+
+        Page<Object[]> result = repository.searchPage(pageRequestDTO.getType(), pageRequestDTO.getKeyword(), pageRequestDTO.getPageable(Sort.by("bno").descending()));
+
         return new PageResultDTO<>(result, fn); //위에서 이미 반환타입으로 명시했으니까 지네릭 생략가능
     }
 

@@ -15,6 +15,9 @@ public class PageRequestDTO {
     private int page; // 음수값 등이 들어올 수 없게 추가 설계 필요
     private int size;
 
+    private String type;
+    private String keyword;
+
     public PageRequestDTO() { // 멤버변수 null 등의 문제 막기 위해 @NoArgsConstructor안씀
         this.page = 1;
         this.size = 10;

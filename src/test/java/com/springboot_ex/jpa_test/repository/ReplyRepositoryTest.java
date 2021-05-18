@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -42,5 +43,12 @@ public class ReplyRepositoryTest {
 
         System.out.println(reply); // 참조한 부분 제외해서 보여줌
         System.out.println(reply.getBoard()); // Board객체에 해당하는 부분은 이쪽으로 따로 가져와야한다.
+    }
+
+    @Test
+    public void testListByBoard() {
+        List<Reply> replyList = replyRepository.getRepliesByBoardOrderByRno(Board.builder().bno(97L).build());
+
+        replyList.forEach(reply -> System.out.println(reply));
     }
 }

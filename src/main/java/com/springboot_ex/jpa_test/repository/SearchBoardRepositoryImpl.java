@@ -182,6 +182,7 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport impleme
             
             return new PageImpl<Object[]>(
                     result.stream().map(t -> t.toArray()).collect(Collectors.toList()), pageable, count
+                    // toArray : 리스트에 저장된 객체를 객체 배열로 반환
             );
             
             // 리턴타입이 Page<Object[]>이므로 Page 타입 객체 생성

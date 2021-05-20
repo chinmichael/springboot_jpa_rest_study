@@ -38,7 +38,7 @@ public class Swagger2Config {
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.springboot_ex.jpa_test.controller."))
+                .apis(RequestHandlerSelectors.basePackage("com.springboot_ex.jpa_test."))
                 // 검색을 할 Controller의 범위 제한
                 .paths(PathSelectors.any())
                 // 검색된 Controller의 매핑 URL을 특정패턴으로 제한
@@ -49,8 +49,8 @@ public class Swagger2Config {
     private ApiInfo apiInfo() { // 부가적인 API 문서 커스텀
 
         return new ApiInfoBuilder()
-                .title("") // 문서 제목
-                .version("") // 문서 버전
+                .title("JPA/API/TEST Exercise") // 문서 제목
+                .version("1.0") // 문서 버전
                 .description("") // 문서 설명
                 .license("") // 라이센스
                 .licenseUrl("") // 라이센스 url

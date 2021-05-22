@@ -5,9 +5,14 @@ import com.springboot_ex.jpa_test.entity.MovieImage;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Commit;
 
 import javax.transaction.Transactional;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
@@ -49,6 +54,42 @@ public class MovieRepositoryTest {
             }
 
         });
+    }
 
+    @Test
+    public void testListPage() {
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "mno"));
+
+        Page<Object[]> result = movieRepository.getListPage(pageRequest);
+
+        for(Object[] objs : result.getContent()) {
+            System.out.println(Arrays.toString(objs));
+        }
+    }
+
+    @Test
+    public void testGetMovieWithAll() {
+        List<Object[]> result = movieRepository.getMovieWithAll(92L);
+
+        System.out.println(result);
+
+        for(Object[] arr : result) {
+            System.out.println(Arrays.toString(arr));
+        }
+    }
+
+    @Test
+    public void testGetMovieWithAll2() {
+        List<Object[]> result1 = movieRepository.getMovieWithReview(92L);
+
+        Movie movie = Movie.builder().mno(92L).build();
+        List<MovieImage> result2 = movieImageRepository.findByMovie(movie);
+
+        for(Object[] arr : result1) {
+            System.out.println(Arrays.toString(arr));
+        }
+        for (MovieImage mi : result2) {
+            System.out.println(mi);
+        }
     }
 }

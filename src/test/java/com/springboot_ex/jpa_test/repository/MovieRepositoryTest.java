@@ -79,6 +79,7 @@ public class MovieRepositoryTest {
     }
 
     @Test
+    @Transactional
     public void testGetMovieWithAll2() {
         List<Object[]> result1 = movieRepository.getMovieWithReview(92L);
 

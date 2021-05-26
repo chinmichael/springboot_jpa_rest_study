@@ -152,3 +152,23 @@ public class GuestbookServiceImpl implements GuestbookService {
     하지만 다른 두 방식은 의존성 주입 필드가 좀 많아지면 코드 복잡성이 올라가는데
     이때 @RequiredArgsConstructor를 선언하고 각 의존성 주입 객체에 final 선언을 처리하면 불변성 처리 + 간결히 정리됨
  */
+
+/*  5/26 : 의존성 주입방식 보충
+
+    의존성 주입(Dependency Injection) 방식 3가지
+    -	생성자 (클래스 생성자에 객체 주입을 시키고 Autowired)
+    -	Setter (Setter 메서드를 만들어 객체 주입을 시키고 Autowired)
+    -	필드 (가장 쓰기 편해서 일반적으로 쓰임)
+
+    생성자 주입방식 선호
+    -	스프링 4.3 이후 클래스의 생성자가 하나이고 (주입을 받을 클래스를 이야기) 주입받는 객체들이 Bean으로 등록되어 있으면
+        (그래서 주로 @Service한 애들이나 @Repsoitory한 얘들) @Autowired를 생략 가능
+    -	@RequiredArgsContructor를 클래스에 선언하면 final이나 @NonNull 필드에 대한 생성자를 생성해주므로 해당 파트들에 대해 생성자 의존성 주입이 알아서 된다.
+        (물론 NoArgs~나 AllArgs~같이 선언하면 생성자가 여러 개가 되니 당빠 안됨)
+    -	생성자 주입으로 의존성 주입을 하면 불변성처리도 되고 무엇보다 해당 객체의 주입 없이는 인스턴스 생성이 불가능하므로 의존성 주입을 강제할 수 있다.
+    -	물론 위와 같은 이유로 순환참조를 막을 수 있으나
+        역으로 어쩔 수 없이 순환참조가 필요한 높은 결합도를 피할 수 없는 구조에서는 Setter나 필드 주입 방식을 사용한다.
+
+
+
+ */

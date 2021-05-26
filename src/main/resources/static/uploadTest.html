@@ -25,11 +25,19 @@
 
             let divArea = $(".uploadResult");
 
+            let str = "";
+
             for(let i = 0; i < arr.length; i++) {
-                divArea.append(`<p>${arr[i].imageURL}</p>`);
-                divArea.append(`<img src='/display?fileName=${arr[i].imageURL}' style="width:100px;">`);
+                str += "<div>";
+                str += `<p>${arr[i].imageURL}</p>`;
+                str += `<img src='/display?fileName=${arr[i].thumbnailURL}' style="width:100px;">`;
                 //rest api상 위와 같은 ?커맨드 url은 올바르지 않으나 특수문자 문제로 올바르게 보내지지 않으므로 일단 사용
+                str += `<button class='removeBtn' data-name=${arr[i].imageURL}>remove</button>`;
+                //data-name은 파일 이름 알기 위한 커스텀 속성
+                //HTML5부터 사용가능한 속성으로 data-*로 메타데이터 추가저장이 가능함
+                str += "</div>";
             }
+            divArea.append(str);
 
         }
 
@@ -67,6 +75,25 @@
                 }
 
             });
+        });
+
+        $(".uploadResult").on("click", ".removeBtn", function(e) {
+
+            let target = $(this); // 클릭된 버튼
+            let fileName = target.data("name"); // 위 커스텀 속성 data의 name
+            let targetDiv = $(this).closest("div");
+            // jQuery함수 >> 선택요소를 포함 가장 가까운 상위요소 vs parent() 경우 root(Document까지 탐색한다 > 결과가 여러개일 수)
+            //$().closest("선택자 혹은 변수") >> 선택자는 마찬가지로 css 선택자 형태
+
+            console.log(fileName);
+
+            $.post('/removeFile', {fileName:fileName}, function(result) {
+                //파일명이 경로라 post 방식으로 해서 body로 보냄
+                console.log(result);
+                if(result === true) {
+                    targetDiv.remove();
+                }
+            })
         });
 
 

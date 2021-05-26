@@ -2,19 +2,18 @@ package com.springboot_ex.jpa_test.controller;
 
 import com.springboot_ex.jpa_test.dto.UploadResultDTO;
 import lombok.extern.log4j.Log4j2;
+import net.coobird.thumbnailator.Thumbnailator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -88,6 +87,16 @@ public class UploadController {
 
             try {
                 uploadFile.transferTo(savePath); // 경로 객체를 통해 업로드된 파일 저장
+
+                // 섬네일 생성 파일 이름 앞에 s_를 붙인다
+                String thumbnailSaveName = uploadPath + File.separator + folderPath + File.separator
+                                            + "s_" + uuid + "_" + fileName;
+
+                File thumbnailFile = new File(thumbnailSaveName);
+
+                // 라이브러리로 섬네일 생성 savePath경로로 파일을 생성하며 (savePath.toFile()) 지정한 파일과 크기로 생성
+                Thumbnailator.createThumbnail(savePath.toFile(), thumbnailFile, 100, 100);
+
                 resultDTOList.add(new UploadResultDTO(fileName, uuid, folderPath));
                 
             } catch(IOException e) {
@@ -160,6 +169,16 @@ public class UploadController {
         (이 헤더로 지정되는 값의 표준은 MIME-type)
      */
 
+    /*  5/25 : 섬네일 이미지 생성
+
+        원본 이미지가 평상시에도 화면에 바로 나오면 데이터를 많이 소비하기에
+        가능한 섬네일을 만들어 전송해주고 필요할 때 원본을 호출하는 것이 좋음
+
+        섬네일 처리는 java.imageio패키지를 이용하거나 전용 라이브리를 사용
+        >> 라이브러리가 코드절감 + 비율조정이 편하다
+
+     */
+
     @GetMapping("/display")
     public ResponseEntity<byte[]> getFile(String fileName) {
         //rest api상 위와 같은 ?커맨드 url은 올바르지 않으나 특수문자 문제로 올바르게 보내지지 않으므로 일단 사용
@@ -190,10 +209,33 @@ public class UploadController {
 
         } catch(Exception e) {
             log.error(e.getMessage()); // 출력하지 않고 로그에만 보이도록 getMessage이용
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); //500에러 >> 서버문제 문제의 구체를 표현할 수 없음
         }
 
         return result;
+    }
+
+    @PostMapping("/removeFile") // 마찬가지로 경로문제 때문에 POST방식으로 해서 BODY로 받아야함
+    public ResponseEntity<Boolean> removeFile(String fileName) {
+
+        String srcFileName = null;
+
+        try {
+            srcFileName = URLDecoder.decode(fileName, "UTF-8");
+            File file = new File(uploadPath + File.separator + srcFileName);
+            boolean result = file.delete();
+
+            File thumbnail = new File(file.getParent(), "s_" + file.getName());
+
+            result = thumbnail.delete();
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
+
+        } catch(UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return new ResponseEntity<> (false, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
 }
